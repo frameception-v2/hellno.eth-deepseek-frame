@@ -38,7 +38,7 @@ function StatusCard() {
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <p className="text-sm text-muted-foreground">
-          "dad went to get a pack of cigarettes and never came back"
+          &quot;dad went to get a pack of cigarettes and never came back&quot;
         </p>
         <PurpleButton onClick={handleRedirect}>
           Check DeepSeek Status
