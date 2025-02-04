@@ -13,6 +13,7 @@ import {
   CardDescription,
   CardContent,
 } from "~/components/ui/card";
+import { PurpleButton } from "~/components/ui/PurpleButton";
 
 import { config } from "~/components/providers/WagmiProvider";
 import { truncateAddress } from "~/lib/truncateAddress";
@@ -20,19 +21,28 @@ import { base, optimism } from "wagmi/chains";
 import { useSession } from "next-auth/react";
 import { createStore } from "mipd";
 import { Label } from "~/components/ui/label";
-import { PROJECT_TITLE } from "~/lib/constants";
+import { PROJECT_TITLE, DEEPSEEK_STATUS_URL } from "~/lib/constants";
 
-function ExampleCard() {
+function StatusCard() {
+  const handleRedirect = useCallback(() => {
+    sdk.actions.openUrl(DEEPSEEK_STATUS_URL);
+  }, []);
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Welcome to the Frame Template</CardTitle>
+        <CardTitle>DeepSeek Status Monitor</CardTitle>
         <CardDescription>
-          This is an example card that you can customize or remove
+          Real-time service status updates for DeepSeek
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <Label>Place content in a Card here.</Label>
+      <CardContent className="flex flex-col gap-4">
+        <p className="text-sm text-muted-foreground">
+          "dad went to get a pack of cigarettes and never came back"
+        </p>
+        <PurpleButton onClick={handleRedirect}>
+          Check DeepSeek Status
+        </PurpleButton>
       </CardContent>
     </Card>
   );
@@ -45,7 +55,6 @@ export default function Frame(
   const [context, setContext] = useState<Context.FrameContext>();
 
   const [added, setAdded] = useState(false);
-
   const [addFrameResult, setAddFrameResult] = useState("");
 
   const addFrame = useCallback(async () => {
@@ -74,7 +83,6 @@ export default function Frame(
       setContext(context);
       setAdded(context.client.added);
 
-      // If frame isn't already added, prompt user to add it
       if (!context.client.added) {
         addFrame();
       }
@@ -106,13 +114,9 @@ export default function Frame(
       console.log("Calling ready");
       sdk.actions.ready({});
 
-      // Set up a MIPD Store, and request Providers.
       const store = createStore();
-
-      // Subscribe to the MIPD Store.
       store.subscribe((providerDetails) => {
         console.log("PROVIDER DETAILS", providerDetails);
-        // => [EIP6963ProviderDetail, EIP6963ProviderDetail, ...]
       });
     };
     if (sdk && !isSDKLoaded) {
@@ -142,7 +146,7 @@ export default function Frame(
         <h1 className="text-2xl font-bold text-center mb-4 text-neutral-900">
           {title}
         </h1>
-        <ExampleCard />
+        <StatusCard />
       </div>
     </div>
   );
